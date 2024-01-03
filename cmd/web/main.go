@@ -13,7 +13,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	fileServer := http.FileServer(http.Dir("/home/rado/sw/go/Lets-go/ui/static/"))
+	fileServer := http.FileServer(http.Dir("../..//ui/static/"))
 
 	mux.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
