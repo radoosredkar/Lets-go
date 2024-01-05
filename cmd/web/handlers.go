@@ -22,21 +22,20 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	//ts, err := template.ParseFiles("./ui/html/pages/home.html") //Cannot fix relative path in vs code
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
-		app.errorLog.Println(err.Error())
+		app.serverError(w, err)
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil {
-		app.errorLog.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
+		app.serverError(w, err)
 	}
 	w.Write([]byte("Hello from Snippetbox"))
 }
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
-		http.NotFound(w, r)
+		app.notFound(w)
 		return
 	}
 	fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
