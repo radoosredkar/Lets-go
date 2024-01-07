@@ -3,9 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
-	"os"
 	"strconv"
 
 	"snippetbox.rado.net/internals/models"
@@ -16,7 +14,17 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	fmt.Println(os.Getwd())
+
+	snippets, err := app.snippets.Latest()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	for _, snippet := range snippets {
+		fmt.Fprintf(w, "%v\n", snippet)
+	}
+	/*fmt.Println(os.Getwd())
 	files := []string{
 		"../../ui/html/base.html",
 		"../..//ui/html/partials/nav.html",
@@ -32,7 +40,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.serverError(w, err)
 	}
-	w.Write([]byte("Hello from Snippetbox"))
+	w.Write([]byte("Hello from Snippetbox"))*/
 }
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
