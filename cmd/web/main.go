@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -12,9 +13,10 @@ import (
 )
 
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	snippets *models.SnippetModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	snippets      *models.SnippetModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -32,11 +34,16 @@ func main() {
 	}
 
 	defer db.Close()
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		errolLog.Fatal(err)
+	}
 
 	app := &application{
-		infoLog:  infoLog,
-		errorLog: errolLog,
-		snippets: &models.SnippetModel{DB: db},
+		infoLog:       infoLog,
+		errorLog:      errolLog,
+		snippets:      &models.SnippetModel{DB: db},
+		templateCache: templateCache,
 	}
 
 	srv := &http.Server{
@@ -46,7 +53,7 @@ func main() {
 	}
 
 	infoLog.Printf("Starting server on %s", *addr)
-	infoLog.Printf("Stayed on page %s", "127 (chapter 5)")
+	infoLog.Printf("Stayed on page %s", "157 (chapter 5)")
 	err = srv.ListenAndServe()
 	errolLog.Fatal(err)
 }
