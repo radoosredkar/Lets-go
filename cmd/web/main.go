@@ -53,7 +53,7 @@ func main() {
 	}
 
 	infoLog.Printf("Starting server on %s", *addr)
-	infoLog.Printf("Stayed on page %s", "157 (chapter 5)")
+	infoLog.Printf("Stayed on page %s", "169 (chapter 6)")
 	err = srv.ListenAndServe()
 	errolLog.Fatal(err)
 }
